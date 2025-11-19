@@ -1,5 +1,5 @@
 
-# Guided: Task Manager Application in JavaScript and TypeScript
+# Guided: Deploy and Manage Your First App on Kubernetes
 Here you'll find the checks for the objectives you find in the lab instructions. Wait until the lab instructions tell you to run the check before proceeding.
 {% steps %}
 ## Objective Checks
