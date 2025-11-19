@@ -3,119 +3,121 @@
 Here you'll find the checks for the objectives you find in the lab instructions. Wait until the lab instructions tell you to run the check before proceeding.
 {% steps %}
 ## Objective Checks
-{% step title="Task 3.1: Define Base Image and Working Directory" %}
+{% step title="TestStep2Task1" %}
 {% task %}
-The first step in creating a Docker image is defining its foundation. In the `Dockerfile`, you need to specify a base image and set up the container's filesystem.
+{% check type="command" query="bash runTest.sh TestStep2Task1" %}
+{% feedback pattern=".*" type="success" %}
+Excellent! Your `deployment.yaml` manifest is well-formed and ready to be applied to the cluster.
+{% /feedback %}
+{% feedback pattern="AssertionFailedError:" type="error" %}
+The `deployment.yaml` file is missing or has incorrect content. Make sure it defines a valid Deployment with the correct name, labels, and container image.
+{% /feedback %}
+{% /check %}
+{% /task %}
+{% /step %}
 
-*   **Base Image (`FROM`):** Every `Dockerfile` must start with a `FROM` instruction. This specifies the parent image from which you are building. For a Java application, a base image containing a Java Development Kit (JDK) is required for compilation. We'll use `eclipse-temurin:21-jdk-noble`, which is a good starting point.
-*   **Working Directory (`WORKDIR`):** The `WORKDIR` instruction sets the working directory for any subsequent `RUN`, `CMD`, `ENTRYPOINT`, `COPY`, and `ADD` instructions. This helps keep your `Dockerfile` clean and organized.
+{% step title="TestStep2Task2" %}
+{% task %}
+{% check type="command" query="bash runTest.sh TestStep2Task2" %}
 
-Your task is to add these two instructions to the `Dockerfile`.
+{% feedback pattern=".*" type="success" %}
+Perfect! The application is now deployed, and a Pod is running inside your cluster.
+{% /feedback %}
+{% feedback pattern="AssertionFailedError:" type="error" %}
+The `hello-kubernetes` Deployment doesn't seem to be running correctly. Make sure you applied the `deployment.yaml` file and that the Pod has started without errors.
+{% /feedback %}
+{% /check %}
+{% /task %}
+{% /step %}
+
+{% step title="TestStep3Task1" %}
+{% task %}
 {% check type="command" query="bash runTest.sh TestStep3Task1" %}
 
 {% feedback pattern=".*" type="success" %}
-Excellent! The foundation of the Dockerfile is now set.
+Great job! The Service manifest is ready to expose your Deployment.
 {% /feedback %}
 
 {% feedback pattern="AssertionFailedError:" type="error" %}
-Not quite. Make sure your Dockerfile includes both a `FROM` instruction for `eclipse-temurin:21-jdk-noble` and a `WORKDIR` instruction set to `/app`.
+The `service.yaml` file is missing or incorrect. Ensure it defines a Service of type `NodePort` and that its selector correctly targets the `app: hello-kubernetes` label.
 {% /feedback %}
 {% /check %}
 {% /task %}
 {% /step %}
 
-{% step title="Task 3.2: Copy Source Code and Compile" %}
+{% step title="TestStep3Task2" %}
 {% task %}
-With the base image and working directory set up, the next step is to get your application code into the image and compile it
-*   **Copying Files (`COPY`):** The `COPY` instruction is used to copy files or directories from your host machine (the build context) into the container's filesystem. You'll need to copy all the project files into the `/app` directory you defined earlier.
-*   **Running Commands (`RUN`):** The `RUN` instruction executes commands in a new layer on top of the current image. You will use it to invoke the Java compiler (`javac`) to compile your source code into bytecode (`.class` files).
-
-Your task is to add the `COPY` and `RUN` instructions to build your application inside the image.
 {% check type="command" query="bash runTest.sh TestStep3Task2" %}
 
 {% feedback pattern=".*" type="success" %}
-Great job! The application code is now copied and compiled within the image.
+Success! Your application is now deployed and accessible from outside the cluster.
 {% /feedback %}
 
 {% feedback pattern="AssertionFailedError:" type="error" %}
-Almost there. Ensure you have a `COPY . .` instruction to copy the files and a `RUN` instruction that correctly compiles the `SimpleWebServer.java` file.
+The application cannot be reached. Make sure you've applied the `service.yaml` manifest and are using the correct URL from the `minikube service` command.
 {% /feedback %}
 {% /check %}
 {% /task %}
 {% /step %}
 
-{% step title="Task 3.3: Expose Port and Define Run Command" %}
+{% step title="TestStep4Task1" %}
 {% task %}
-The final step for our initial `Dockerfile` is to tell Docker how to run the compiled application and how to allow network traffic to it.
-*   **Exposing Ports (`EXPOSE`):** The `EXPOSE` instruction informs Docker that the container listens on the specified network ports at runtime. It functions as a type of documentation between the person who builds the image and the person who runs the container. Our Java application listens on port 8080.
-*   **Default Command (`CMD`):** The `CMD` instruction provides the default command to execute when a container is run from the image. For our application, this involves using the `java` command to run the main class.
-
-Your task is to add the `EXPOSE` and `CMD` instructions to make your image runnable.
-{% check type="command" query="bash runTest.sh TestStep3Task3" %}
+{% check type="command" query="bash runTest.sh TestStep4Task1" %}
 
 {% feedback pattern=".*" type="success" %}
-Perfect! Your first Dockerfile is complete and ready to be built.
+Excellent. You've now inspected the detailed state of a Pod, a critical skill for managing Kubernetes applications.
 {% /feedback %}
 
 {% feedback pattern="AssertionFailedError:" type="error" %}
-Check your instructions carefully. You need to `EXPOSE` port 8080 and provide the correct `CMD` to execute the compiled Java class.
+This task is for exploration, but to pass the check, make sure you run `kubectl describe pod` on the correct Pod name.
 {% /feedback %}
 {% /check %}
 {% /task %}
 {% /step %}
-{% step title="Task 5.1: Name the Build Stage" %}
-{% task %}
-Now we'll begin refactoring our `Dockerfile` to use a multi-stage build. The first step is to officially name our existing set of instructions as the 'build' stage.
 
-By adding `AS build` to the first `FROM` instruction, you create a named stage. This allows later stages to refer back to this stage and copy artifacts from it. This is the foundation of a multi-stage build, clearly separating the environment used for compiling from the one used for running.
+{% step title="TestStep4Task2" %}
+{% task %}
+{% check type="command" query="bash runTest.sh TestStep4Task2" %}
+
+{% feedback pattern=".*" type="success" %}
+Well done! You can now check the logs from any running container, giving you direct insight into your application's behavior.
+{% /feedback %}
+
+{% feedback pattern="AssertionFailedError:" type="error" %}
+This task is for exploration, but to pass the check, make sure you run `kubectl logs` on the correct Pod name.
+{% /feedback %}
+{% /check %}
+{% /task %}
+{% /step %}
+
+{% step title="TestStep5Task1" %}
+{% task %}
 {% check type="command" query="bash runTest.sh TestStep5Task1" %}
 
 {% feedback pattern=".*" type="success" %}
-Excellent! You've officially created the 'build' stage.
+Fantastic! You've just scaled your application to handle more traffic. Kubernetes automatically distributed and started the new Pods.
 {% /feedback %}
 
 {% feedback pattern="AssertionFailedError:" type="error" %}
-Not quite. You just need to modify the first `FROM` line by adding `AS build` at the end.
+The Deployment doesn't have 3 replicas. Make sure you ran the `kubectl scale` command correctly for the `hello-kubernetes` deployment.
 {% /feedback %}
 {% /check %}
 {% /task %}
 {% /step %}
 
-{% step title="Task 5.2: Define the Final Runtime Stage" %}
+{% step title="TestStep5Task2" %}
 {% task %}
-The goal of a multi-stage build is to have a small final image. To achieve this, we'll create a new, second stage that is based on a much smaller image. Instead of the full JDK, we only need the Java Runtime Environment (JRE) to run our compiled code.\n\nYour task is to define this new final stage.
-*   Add a new `FROM` instruction using the `eclipse-temurin:21-jre-noble` image. This image is significantly smaller because it doesn't include the compiler and other development tools.
-*   Set the `WORKDIR` for this new stage to `/app`.
 {% check type="command" query="bash runTest.sh TestStep5Task2" %}
 
 {% feedback pattern=".*" type="success" %}
-Perfect! The lightweight final stage is now defined.
+Excellent work! You've successfully cleaned up your environment, an important final step in the resource lifecycle.
 {% /feedback %}
 
 {% feedback pattern="AssertionFailedError:" type="error" %}
-Almost. Make sure you add a new `FROM eclipse-temurin:21-jre-noble` instruction and also set the `WORKDIR` for this new stage.
+It looks like some resources still exist. Make sure you ran `kubectl delete` using both the `service.yaml` and `deployment.yaml` files.
 {% /feedback %}
 {% /check %}
 {% /task %}
 {% /step %}
 
-{% step title="Task 5.3: Copy Artifact and Set Final Command" %}
-{% task %}
-The new stage is empty. We need to copy the compiled application from the `build` stage into our new, final stage. We also need to tell this stage how to run the application.
-*   **`COPY --from`**: Use a special version of the `COPY` instruction to copy files *from another stage*. You need to copy the compiled `SimpleWebServer.class` file from the `build` stage into the current stage.
-*   **Final `CMD`**: Redefine the `CMD` for this final stage. The command is similar to before, but the classpath might be different depending on where you copy the class file.
-
-Complete the `Dockerfile` by adding these final instructions.
-{% check type="command" query="bash runTest.sh TestStep5Task3" %}
-
-{% feedback pattern=".*" type="success" %}
-Perfect! Your first Dockerfile is complete and ready to be built.
-{% /feedback %}
-
-{% feedback pattern="AssertionFailedError:" type="error" %}
-Congratulations! You have successfully created an optimized, multi-stage Dockerfile for a Java application.
-{% /feedback %}
-{% /check %}
-{% /task %}
-{% /step %}
 {% /steps %}
