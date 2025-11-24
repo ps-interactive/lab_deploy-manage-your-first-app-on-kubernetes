@@ -24,6 +24,7 @@ TestStep2Task1() {
     check_command "'deployment.yaml' is not a valid Kubernetes manifest."
     grep 'image: paulbouwer/hello-kubernetes:1.10' deployment.yaml > /dev/null
     check_command "Container image in 'deployment.yaml' is incorrect."
+    echo "Excellent! Your deployment.yaml manifest is well-formed and ready to be applied to the cluster."
 }
 
 # Test for Step 2, Task 2
@@ -33,6 +34,7 @@ TestStep2Task2() {
         echo "AssertionFailedError: Deployment 'hello-kubernetes' does not have 1 ready replica. Found: '$REPLICAS'"
         exit 1
     fi
+    echo "Perfect! The application is now deployed, and a Pod is running inside your cluster."
 }
 
 # Test for Step 3, Task 1
@@ -45,6 +47,7 @@ TestStep3Task1() {
     check_command "'service.yaml' is not a valid Kubernetes manifest."
     grep 'type: NodePort' service.yaml > /dev/null
     check_command "Service in 'service.yaml' is not of type 'NodePort'."
+    echo "Great job! The Service manifest is ready to expose your Deployment."
 }
 
 # Test for Step 3, Task 2
@@ -53,6 +56,7 @@ TestStep3Task2() {
     check_command "Could not get URL for service 'hello-kubernetes'. Is it running?"
     curl -s --max-time 5 "$URL" | grep 'Hello Kubernetes!' > /dev/null
     check_command "Application at URL '$URL' did not respond correctly."
+    echo "Success! Your application is now deployed and accessible from outside the cluster."
 }
 
 # Test for Step 4, Task 1 (existence check)
@@ -62,6 +66,7 @@ TestStep4Task1() {
         echo "AssertionFailedError: Could not find any ready Pods for deployment 'hello-kubernetes'."
         exit 1
     fi
+    echo "Excellent. You've now inspected the detailed state of a Pod, a critical skill for managing Kubernetes applications."
 }
 
 # Test for Step 4, Task 2 (existence check)
@@ -71,6 +76,7 @@ TestStep4Task2() {
         echo "AssertionFailedError: Could not find any ready Pods for deployment 'hello-kubernetes'."
         exit 1
     fi
+    echo "Well done! You can now check the logs from any running container, giving you direct insight into your application's behavior."
 }
 
 # Test for Step 5, Task 1
@@ -80,6 +86,7 @@ TestStep5Task1() {
         echo "AssertionFailedError: Deployment 'hello-kubernetes' does not have 3 ready replicas. Found: '$REPLICAS'"
         exit 1
     fi
+    echo "Fantastic! You've just scaled your application to handle more traffic. Kubernetes automatically distributed and started the new Pods."
 }
 
 # Test for Step 5, Task 2
@@ -94,6 +101,7 @@ TestStep5Task2() {
         echo "AssertionFailedError: Service 'hello-kubernetes' still exists."
         exit 1
     fi
+    echo "Excellent work! You've successfully cleaned up your environment, an important final step in the resource lifecycle."
 }
 
 
